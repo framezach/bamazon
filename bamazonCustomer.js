@@ -80,6 +80,7 @@ function request() {
                                     if (error) throw err;
                                     console.log("Congratulations, your item is on its way!");
                                     console.log("Your total comes to: " + parseInt(totalCost));
+                                    connection.end();
                                 }
                             )
                         }
