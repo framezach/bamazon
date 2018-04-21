@@ -32,7 +32,7 @@ function displayProduct() {
         request();
     })
 }
-
+// Prompts the user to choose an item from a rawlist and then asks how many they want. 
 function request() {
     connection.query("SELECT * FROM products", function (err, results) {
         inquirer.prompt([{
@@ -53,18 +53,18 @@ function request() {
                     message: "How many would you like to purchase?: "
                 }
             ])
-            .then(function (answer) {
+            .then(function (answer) { // Then decides if we have enough. If not, the connection terminates. 
                 var chosenItem;
                 var itemPrice;
-                var totalCost;
+                var totalCost = 0;
                 for (var i = 0; i < results.length; i++) {
                     if (results[i].product_name === answer.request) {
                         chosenItem = results[i];
                         if (results[i].stock_quantity < answer.quantity) {
                             console.log("Sorry, we don't have that many!");
                             connection.end();
-                        } else {
-                            totalCost = parseInt(results[i].price * answer.input);
+                        } else { // If everything goes as planneed you reach this point and the database is updated (currently functioning), and then confirms shipment.
+                            totalCost = parseInt(results[i].price * answer.quantity);
                             var remainingQuantity = parseInt(results[i].stock_quantity - answer.quantity);
                             connection.query(
                                 "UPDATE products SET ? WHERE ?",
